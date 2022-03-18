@@ -11,7 +11,7 @@ let response = "";
 
 pickWord();
 
-// TODO: klikalne guziki, API, wyniki, wykres, srednia ilosc prob, animacje jakies moze XD
+// TODO: wyniki, wykres, srednia ilosc prob, animacje
 
 function guess() {
 
