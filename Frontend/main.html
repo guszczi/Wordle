@@ -1,0 +1,62 @@
+<html lang="en">
+
+<head>
+	<title>Wordle</title>
+	<link rel="stylesheet" href="style.css" />
+	<meta charset="UTF-8" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="guesses"></div>
+		<div class="input">
+			<input type="text" id="word" onkeydown="guess()" />
+		</div>
+		<div id="buttons">
+			<button id="pickWord" onClick="pickWord()">NEW WORD</button>
+			<button id="keepPlaying" onClick="keepPlaying()">CONTINUE</button>
+		</div>
+
+		<div id="keyboard">
+			<div class="row">
+				<span onclick="clickOnLetter(this)">Q</span>
+				<span onclick="clickOnLetter(this)">W</span>
+				<span onclick="clickOnLetter(this)">E</span>
+				<span onclick="clickOnLetter(this)">R</span>
+				<span onclick="clickOnLetter(this)">T</span>
+				<span onclick="clickOnLetter(this)">Y</span>
+				<span onclick="clickOnLetter(this)">U</span>
+				<span onclick="clickOnLetter(this)">I</span>
+				<span onclick="clickOnLetter(this)">O</span>
+				<span onclick="clickOnLetter(this)">P</span>
+			</div>
+			<div class="row">
+				<span onclick="clickOnLetter(this)">A</span>
+				<span onclick="clickOnLetter(this)">S</span>
+				<span onclick="clickOnLetter(this)">D</span>
+				<span onclick="clickOnLetter(this)">F</span>
+				<span onclick="clickOnLetter(this)">G</span>
+				<span onclick="clickOnLetter(this)">H</span>
+				<span onclick="clickOnLetter(this)">J</span>
+				<span onclick="clickOnLetter(this)">K</span>
+				<span onclick="clickOnLetter(this)">L</span>
+				<span class="enter" onclick="guess()">Enter</span>
+			</div>
+			<div class="row">
+				<span onclick="clickOnLetter(this)">Z</span>
+				<span onclick="clickOnLetter(this)">X</span>
+				<span onclick="clickOnLetter(this)">C</span>
+				<span onclick="clickOnLetter(this)">V</span>
+				<span onclick="clickOnLetter(this)">B</span>
+				<span onclick="clickOnLetter(this)">N</span>
+				<span onclick="clickOnLetter(this)">M</span>
+			</div>
+
+		</div>
+	</div>
+
+
+	<script src="script.js"></script>
+</body>
+
+</html>
