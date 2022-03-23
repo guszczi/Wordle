@@ -30,7 +30,7 @@ namespace Backend
         {
             services.AddSingleton<IWordRepository, WordRepository>();
             services.AddCors();
-            
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -49,9 +49,13 @@ namespace Backend
             }
 
             app.UseCors(
-                options => options.WithOrigins("http://127.0.0.1:5500").AllowAnyMethod()
+                options => options
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true)
+                .AllowCredentials()
                 );
-            
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

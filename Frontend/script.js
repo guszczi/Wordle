@@ -5,15 +5,19 @@ let letters = document.querySelectorAll("span");
 let keepPlayingButton = document.querySelector("#keepPlaying");
 let isOver = false;
 const url = "https://localhost:5001/Word";
+let correctWordId = 20;
+let response;
 let wordsCount = 0;
-let correctWordId = 0;
-let response = "";
 
-pickWord();
+getWordsLength().then((res) => {
+    wordsCount = res;
+    pickWord();
+})
+
 
 // TODO: wyniki, wykres, srednia ilosc prob, animacje
 
-function guess() {
+async function guess() {
 
     if (event.key === 'Enter' && !isOver) {
         if (!validate()) {
@@ -21,7 +25,7 @@ function guess() {
         } else {
             let value = userInput.value;
 
-            let cont = createGuess(value);
+            let cont = await createGuess(value);
             cont.className = "cont";
 
             guesses.appendChild(cont);
@@ -42,50 +46,60 @@ function guess() {
     }
 }
 
+async function getWordsLength() {
+    const res = await fetch(url + "/length");
+    let data = await res.text();
+    return JSON.parse(data)
+}
 
-function createGuess(value) {
+async function pickWord() {
+    clearGuesses();
+    correctWordId = Math.floor(Math.random() * wordsCount);
+    console.log(correctWordId)
+    hideButtons();
+    resetKeyboard();
+    userInput.value = '';
+    isOver = false;
+    keepPlayingButton.disabled = false;
+}
+
+
+async function createGuess(value) {
     const data = {
-        id: correctWordId,
-        value: value,
+        "id": correctWordId,
+        "value": value,
     };
 
     console.log(data);
 
-    fetch(url,
-        {
-            body: data,
-            method: "POST",
-            headers: {
-                contentType: "application/json;charset=utf-8"
-            }
-        })
-        .then(res => { console.log(res) })
-        .catch(error => console.log(error));
-
     let cont = document.createElement("div");
 
-    for (let i = 0; i < 5; i++) {
-        let div = document.createElement("div");
-        div.className = "letter";
-        div.innerHTML = value[i].toUpperCase();
+    makeGuess(data).then((res) => {
+        response = res;
+        console.log(response);
 
-        if (value[i] == 'g') {
-            div.style.background = "#47a347";
-            checkKeyboard(value, "#47a347");
-        } else if (value[i] == 'c') {
-            div.style.background = "#b5914f";
-            checkKeyboard(value, "#47a347");
-        } else {
-            div.style.background = "rgba(47, 49, 54)";
-            checkKeyboard(value, "rgb(10, 10, 10)");
+        for (let i = 0; i < 5; i++) {
+            let div = document.createElement("div");
+            div.className = "letter";
+            div.innerHTML = value[i].toUpperCase();
+
+            if (response[i] == 'g') {
+                div.style.background = "#47a347";
+                checkKeyboard(value[i], "#47a347");
+            } else if (response[i] == 'c') {
+                div.style.background = "#b5914f";
+                checkKeyboard(value[i], "#47a347");
+            } else {
+                div.style.background = "rgba(47, 49, 54)";
+                checkKeyboard(value[i], "rgb(10, 10, 10)");
+            }
+
+            cont.append(div);
         }
-
-        cont.append(div);
-    }
+    });
 
     return cont;
 }
-
 
 function clearGuesses() {
     let lastChild = guesses.lastElementChild;
@@ -111,21 +125,18 @@ function keepPlaying() {
     isOver = false;
 }
 
-async function getWordsLength() {
-    const response = await fetch(url + "/length");
-    const data = await response.json();
-    return JSON.parse(data);
-}
-
-function pickWord() {
-    clearGuesses();
-    wordsCount = getWordsLength();
-    correctWordId = Math.floor(Math.random() * wordsCount);
-    hideButtons();
-    resetKeyboard();
-    userInput.value = '';
-    isOver = false;
-    keepPlayingButton.disabled = false;
+async function makeGuess(body) {
+    const header = {
+        body: JSON.stringify(body),
+        method: "POST",
+        headers: {
+            'Accept': "application/json, text/plain, */*",
+            'Content-Type': "application/json;charset=utf-8"
+        }
+    };
+    const res = await fetch(url, header);
+    let data = await res.text();
+    return data;
 }
 
 function validate() {
