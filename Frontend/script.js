@@ -74,29 +74,26 @@ async function createGuess(value) {
 
     let cont = document.createElement("div");
 
-    makeGuess(data).then((res) => {
-        response = res;
-        console.log(response);
+    response = await makeGuess(data)
 
-        for (let i = 0; i < 5; i++) {
-            let div = document.createElement("div");
-            div.className = "letter";
-            div.innerHTML = value[i].toUpperCase();
+    for (let i = 0; i < 5; i++) {
+        let div = document.createElement("div");
+        div.className = "letter";
+        div.innerHTML = value[i].toUpperCase();
 
-            if (response[i] == 'g') {
-                div.style.background = "#47a347";
-                checkKeyboard(value[i], "#47a347");
-            } else if (response[i] == 'c') {
-                div.style.background = "#b5914f";
-                checkKeyboard(value[i], "#47a347");
-            } else {
-                div.style.background = "rgba(47, 49, 54)";
-                checkKeyboard(value[i], "rgb(10, 10, 10)");
-            }
-
-            cont.append(div);
+        if (response[i] == 'g') {
+            div.style.background = "#47a347";
+            checkKeyboard(value[i], "#47a347");
+        } else if (response[i] == 'c') {
+            div.style.background = "#b5914f";
+            checkKeyboard(value[i], "#47a347");
+        } else {
+            div.style.background = "rgba(47, 49, 54)";
+            checkKeyboard(value[i], "rgb(10, 10, 10)");
         }
-    });
+
+        cont.append(div);
+    };
 
     return cont;
 }
