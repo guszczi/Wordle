@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Backend.Entities.Models;
 using Backend.Entities.Repositories;
 using Backend.Entities.Requests;
@@ -19,6 +21,11 @@ namespace Backend.Controllers
             this.repository = repository;
         }
 
+        protected bool ValidateWord(string value)
+        {
+            return value.Length == 5 && Regex.IsMatch(value, @"^[a-zA-Z]+$");
+        }
+        
         [HttpGet("{id}")]
         public string GetWord(int id)
         {
@@ -32,18 +39,23 @@ namespace Backend.Controllers
         }
 
         [HttpPost]
-        public string MakeGuess(GuessRequest request)
+        public IActionResult MakeGuess(GuessRequest request)
         {
+            if (!ValidateWord(request.Value))
+            {
+                return BadRequest("Wrong input!");
+            }
             StringBuilder sb = new StringBuilder();
             string correctWord = GetWord(request.Id);
             for (var i = 0; i < 5; i++)
             {
-                if (request.Value[i] == correctWord[i]) sb.Append('g');
-                else if (correctWord.Contains(request.Value[i])) sb.Append('c');
+                String value = request.Value.ToLower();
+                if (value[i] == correctWord[i]) sb.Append('g');
+                else if (correctWord.Contains(value[i])) sb.Append('c');
                 else sb.Append('w');
             }
 
-            return sb.ToString();
+            return Ok(sb.ToString());
         }
     }
 }

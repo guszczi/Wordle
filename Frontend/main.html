@@ -3,53 +3,60 @@
 <head>
 	<title>Wordle</title>
 	<link rel="stylesheet" href="style.css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<meta charset="UTF-8" />
 </head>
 
 <body>
 	<div id="container">
+		<div class="header">WORDLE</div>
 		<div id="guesses"></div>
 		<div class="input">
-			<input type="text" id="word" onkeydown="guess()" />
+			<input type="text" id="word" />
 		</div>
 		<div id="buttons">
-			<button id="pickWord" onClick="pickWord()">NEW WORD</button>
+			<button id="giveUp" onClick="showCorrectWord()">GIVE UP</button>
 			<button id="keepPlaying" onClick="keepPlaying()">CONTINUE</button>
 		</div>
 
 		<div id="keyboard">
 			<div class="row">
-				<span onclick="clickOnLetter(this)">Q</span>
-				<span onclick="clickOnLetter(this)">W</span>
-				<span onclick="clickOnLetter(this)">E</span>
-				<span onclick="clickOnLetter(this)">R</span>
-				<span onclick="clickOnLetter(this)">T</span>
-				<span onclick="clickOnLetter(this)">Y</span>
-				<span onclick="clickOnLetter(this)">U</span>
-				<span onclick="clickOnLetter(this)">I</span>
-				<span onclick="clickOnLetter(this)">O</span>
-				<span onclick="clickOnLetter(this)">P</span>
+				<div onclick="clickOnLetter(this)">Q</div>
+				<div onclick="clickOnLetter(this)">W</div>
+				<div onclick="clickOnLetter(this)">E</div>
+				<div onclick="clickOnLetter(this)">R</div>
+				<div onclick="clickOnLetter(this)">T</div>
+				<div onclick="clickOnLetter(this)">Y</div>
+				<div onclick="clickOnLetter(this)">U</div>
+				<div onclick="clickOnLetter(this)">I</div>
+				<div onclick="clickOnLetter(this)">O</div>
+				<div onclick="clickOnLetter(this)">P</div>
+
 			</div>
 			<div class="row">
-				<span onclick="clickOnLetter(this)">A</span>
-				<span onclick="clickOnLetter(this)">S</span>
-				<span onclick="clickOnLetter(this)">D</span>
-				<span onclick="clickOnLetter(this)">F</span>
-				<span onclick="clickOnLetter(this)">G</span>
-				<span onclick="clickOnLetter(this)">H</span>
-				<span onclick="clickOnLetter(this)">J</span>
-				<span onclick="clickOnLetter(this)">K</span>
-				<span onclick="clickOnLetter(this)">L</span>
-				<span class="enter" onclick="guess()">Enter</span>
+				<div onclick="clickOnLetter(this)">A</div>
+				<div onclick="clickOnLetter(this)">S</div>
+				<div onclick="clickOnLetter(this)">D</div>
+				<div onclick="clickOnLetter(this)">F</div>
+				<div onclick="clickOnLetter(this)">G</div>
+				<div onclick="clickOnLetter(this)">H</div>
+				<div onclick="clickOnLetter(this)">J</div>
+				<div onclick="clickOnLetter(this)">K</div>
+				<div onclick="clickOnLetter(this)">L</div>
+				<div class="backspace" onclick="backspace()"><i class="material-icons">backspace</i></div>
+
 			</div>
 			<div class="row">
-				<span onclick="clickOnLetter(this)">Z</span>
-				<span onclick="clickOnLetter(this)">X</span>
-				<span onclick="clickOnLetter(this)">C</span>
-				<span onclick="clickOnLetter(this)">V</span>
-				<span onclick="clickOnLetter(this)">B</span>
-				<span onclick="clickOnLetter(this)">N</span>
-				<span onclick="clickOnLetter(this)">M</span>
+				<div onclick="clickOnLetter(this)">Z</div>
+				<div onclick="clickOnLetter(this)">X</div>
+				<div onclick="clickOnLetter(this)">C</div>
+				<div onclick="clickOnLetter(this)">V</div>
+				<div onclick="clickOnLetter(this)">B</div>
+				<div onclick="clickOnLetter(this)">N</div>
+				<div onclick="clickOnLetter(this)">M</div>
+				<div class="enter" onclick="guess()">ENTER</div>
+
 			</div>
 
 		</div>
