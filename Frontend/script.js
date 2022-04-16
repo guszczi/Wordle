@@ -1,7 +1,7 @@
 let userInput = document.querySelector("#word");
 let guesses = document.querySelector("#guesses");
 let buttons = document.querySelector("#buttons");
-let letters = document.querySelectorAll(".row>div");
+let letters = document.querySelectorAll(".letter");
 let keepPlayingButton = document.querySelector("#keepPlaying");
 let giveUpButton = document.querySelector("#giveUp");
 let isOver = false;
@@ -20,6 +20,12 @@ userInput.addEventListener("keyup", (event) => {
         guess();
     }
 })
+
+for (i = 0; i < letters.length; i++) {
+    letters[i].addEventListener('click', (e) => {
+        userInput.value += e.target.innerHTML;
+    })
+}
 
 
 // TODO: wyniki, wykres, srednia ilosc prob, animacje
@@ -175,8 +181,4 @@ function resetKeyboard() {
     for (let letter of letters) {
         letter.style.backgroundColor = "rgba(47, 49, 54)";
     }
-}
-
-function clickOnLetter(e) {
-    userInput.value += e.innerHTML;
 }
