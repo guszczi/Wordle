@@ -2,8 +2,8 @@
 <p align="center">Wordle game with more than just one daily word. Inspired with <a href="https://www.nytimes.com/games/wordle/index.html">Wordle</a>.</p>
 
 <p align="center">
-    <img src="https://github.com/guszczi/Wordle/blob/main/preview1.png" alt="Preview1"></img>
-    <img src="https://github.com/guszczi/Wordle/blob/main/preview2.png" alt="Preview2"></img>
+    <img src="https://github.com/guszczi/Wordle/blob/main/preview1.png" alt="Preview1" width="400px"></img>
+    <img src="https://github.com/guszczi/Wordle/blob/main/preview2.png" alt="Preview2" width="400px"></img>
 </p>
 
 ## Key features
