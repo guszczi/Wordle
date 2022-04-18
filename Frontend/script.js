@@ -6,6 +6,8 @@ let buttons = document.querySelector("#buttons");
 let letters = document.querySelectorAll(".letter");
 let keepPlayingButton = document.querySelector("#keepPlaying");
 let giveUpButton = document.querySelector("#giveUp");
+let alertPopup = document.querySelector(".alert");
+let alertSpan = document.querySelector(".alertSpan");
 const url = "https://192.168.0.16:5001/Word";
 let correctWordId = getWordsLength();
 let response;
@@ -70,27 +72,32 @@ function backspace() {
 async function guess() {
     let userInputValue = userInput.value;
 
-    let row = await createGuess(userInputValue);
-    if (row && guesses.childNodes.length < 6) {
-        row.className = "guess";
-        guesses.appendChild(row);
+    if (guesses.childNodes.length < 6) {
+        row = await createGuess(userInputValue);
+        if (row) {
+            row.className = "guess";
+            guesses.appendChild(row);
+            alertPopup.classList.remove('slide-in');
 
-        if (response == "ggggg") {
-            giveUpButton.innerHTML = "NEW WORD";
-            giveUpButton.setAttribute('onClick', 'location.reload();');
-            showButtons();
-            alert("You guessed right!");
-            keepPlayingButton.disabled = true;
-            let stats = getLocalStorageValue('stats');
-            if (isRanked) stats.wins += 1;
-            stats.guesses[guesses.childNodes.length] += 1;
-            setLocalStorageValue('stats', JSON.stringify(stats))
-        } else if (guesses.childElementCount == 6) {
-            showButtons();
-            alert("Game over!");
+            if (response == "ggggg") {
+                giveUpButton.innerHTML = "NEW WORD";
+                giveUpButton.setAttribute('onClick', 'location.reload();');
+                showButtons();
+                keepPlayingButton.disabled = true;
+                let stats = getLocalStorageValue('stats');
+                if (isRanked) stats.wins += 1;
+                stats.guesses[guesses.childNodes.length] += 1;
+                setLocalStorageValue('stats', JSON.stringify(stats))
+                alertSpan.innerHTML = "YOU WON";
+                alertPopup.classList.add('slide-in');
+            } else if (guesses.childElementCount == 6) {
+                showButtons();
+                alertSpan.innerHTML = "GAME OVER";
+                alertPopup.classList.add('slide-in');
+            }
+
+
         }
-
-
     }
     userInput.value = "";
 }
@@ -159,9 +166,11 @@ function clearGuesses() {
 }
 
 async function showCorrectWord() {
+    alertPopup.classList.remove('slide-in');
     fetch(url + '/' + correctWordId).then((result) => {
         result.text().then((word) => {
-            alert(`The correct word was: ${word}`);
+            alertSpan.innerHTML = `THE ANSWER WAS: ${word.toUpperCase()}`;
+            alertPopup.classList.add('slide-in');
         })
     })
     pickWord();
@@ -199,7 +208,10 @@ async function sendGuessRequest(body) {
         let data = await res.text();
         return data;
     } else {
-        alert(await res.text());
+        let text = await res.text();
+        alertPopup.classList.remove('slide-in');
+        alertSpan.innerHTML = text;
+        alertPopup.classList.add('slide-in');
     }
 }
 
