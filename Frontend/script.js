@@ -1,14 +1,40 @@
+let modal = document.querySelector("#myModal");
+let modalButton = document.querySelector("#btnModal");
 let userInput = document.querySelector("#word");
 let guesses = document.querySelector("#guesses");
 let buttons = document.querySelector("#buttons");
 let letters = document.querySelectorAll(".letter");
 let keepPlayingButton = document.querySelector("#keepPlaying");
 let giveUpButton = document.querySelector("#giveUp");
-let isOver = false;
 const url = "https://192.168.0.16:5001/Word";
 let correctWordId = getWordsLength();
 let response;
 let wordsCount = 0;
+let isRanked = true;
+
+let stats = getLocalStorageValue('stats');
+
+if (!stats) {
+    setLocalStorageValue('stats', JSON.stringify({
+        'wins': 0,
+        'games': 1,
+        'guesses': {
+            1:0,
+            2:0,
+            3:0,
+            4:0,
+            5:0,
+            6:0,
+        },
+    }));
+
+    stats = getLocalStorageValue('stats');
+}
+
+
+document.querySelector("#games").innerHTML = stats.games;
+document.querySelector("#wins").innerHTML = stats.wins;
+document.querySelector("#winratio").innerHTML = Math.round(stats.wins / stats.games * 100) + '%';
 
 getWordsLength().then((res) => {
     wordsCount = res;
@@ -27,8 +53,15 @@ for (i = 0; i < letters.length; i++) {
     })
 }
 
+modalButton.onclick = () => {
+    modal.style.display = "block";
+}
 
-// TODO: wyniki, wykres, srednia ilosc prob, animacje
+window.onclick = (event) => {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
 
 function backspace() {
     userInput.value = userInput.value.slice(0, userInput.value.length - 1)
@@ -38,20 +71,21 @@ async function guess() {
     let userInputValue = userInput.value;
 
     let row = await createGuess(userInputValue);
-    if (row) {
+    if (row && guesses.childNodes.length < 6) {
         row.className = "guess";
         guesses.appendChild(row);
 
         if (response == "ggggg") {
-            isOver = true;
             giveUpButton.innerHTML = "NEW WORD";
-            giveUpButton.setAttribute('onClick', 'pickWord()');
+            giveUpButton.setAttribute('onClick', 'location.reload();');
             showButtons();
             alert("You guessed right!");
             keepPlayingButton.disabled = true;
-            //giveUpButton.onClick = pickWord();
+            let stats = getLocalStorageValue('stats');
+            if (isRanked) stats.wins += 1;
+            stats.guesses[guesses.childNodes.length] += 1;
+            setLocalStorageValue('stats', JSON.stringify(stats))
         } else if (guesses.childElementCount == 6) {
-            isOver = true;
             showButtons();
             alert("Game over!");
         }
@@ -68,12 +102,14 @@ async function getWordsLength() {
 }
 
 async function pickWord() {
+    let stats = getLocalStorageValue('stats');
+    stats.games += 1;
+    setLocalStorageValue('stats', JSON.stringify(stats));
     clearGuesses();
     correctWordId = Math.floor(Math.random() * wordsCount);
     hideButtons();
     resetKeyboard();
     userInput.value = '';
-    isOver = false;
     keepPlayingButton.disabled = false;
     giveUpButton.innerHTML = "GIVE UP";
     giveUpButton.setAttribute('onClick', 'showCorrectWord()');
@@ -85,8 +121,6 @@ async function createGuess(value) {
         "id": correctWordId,
         "value": value,
     };
-
-    console.log(data);
 
     let row = document.createElement("div");
 
@@ -146,7 +180,7 @@ function keepPlaying() {
     clearGuesses();
     guesses.append(lastChild);
     hideButtons();
-    isOver = false;
+    isRanked = false;
 }
 
 async function sendGuessRequest(body) {
@@ -181,4 +215,12 @@ function resetKeyboard() {
     for (let letter of letters) {
         letter.style.backgroundColor = "rgba(47, 49, 54)";
     }
+}
+
+function getLocalStorageValue(key) {
+    return JSON.parse(localStorage.getItem(key));
+}
+
+function setLocalStorageValue(key, value) {
+    localStorage.setItem(key, value);
 }

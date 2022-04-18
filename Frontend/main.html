@@ -9,8 +9,33 @@
 </head>
 
 <body>
+	<div class="header">
+		<span>WORDLE</span>
+		<button id="btnModal"><span class="material-icons">
+			article
+			</span></button>
+	</div>
+
+	<div id="myModal" class="modal">
+		<div class="modal-content">
+			<span>STATISTICS</span>
+			<div class="stats">
+				<span>GAMES</span> 
+				<span>WINS</span>
+				<span>WIN%</span>
+			</div>
+			<div class="stats">
+				<span id="games"></span> 
+				<span id="wins"></span>
+				<span id="winratio"></span>
+			</div>
+			<span style="font-size: min(3vw, 1em); margin-top: 2em;">GUESSES DISTRIBUTION</span>
+
+			<canvas id="myChart" style="width:100%;"></canvas>
+		</div>
+	</div>
+
 	<div id="container">
-		<div class="header">WORDLE</div>
 		<div id="guesses"></div>
 		<div class="input">
 			<input type="text" id="word" />
@@ -62,8 +87,39 @@
 		</div>
 	</div>
 
-
 	<script src="script.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+	<script>
+		let data = getLocalStorageValue('stats').guesses;
+		let xValues = ["1", "2", "3", "4", "5", "6"];
+		let yValues = [];
+		for (let key in data) {
+			yValues.push(data[key]);
+		}
+		new Chart("myChart", {
+		type: "horizontalBar",
+		data: {
+			labels: xValues,
+			datasets: [{
+				backgroundColor: "gray",
+				data: yValues
+			}]
+		},
+			options: {
+				legend: {display: false},
+				title: {display: false},
+				events: [],
+				scales: {
+					xAxes: [{
+						ticks: {
+							beginAtZero: true,
+							callback: function(value) {if (value % 1 === 0) {return value;}}
+						}
+					}]
+				}
+			}
+		});
+	</script>
 </body>
 
 </html>
